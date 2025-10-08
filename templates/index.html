@@ -1,0 +1,92 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weather App (Tech Assessment 1)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Weather App — Tech Assessment 1</h1>
+        <p class="sub">Built by <strong>{{ 'You' }}</strong></p>
+        <a class="info" href="https://www.linkedin.com/company/product-manager-accelerator" target="_blank" rel="noreferrer">About PM Accelerator</a>
+      </header>
+
+      {% if api_key_missing %}
+      <div class="banner warning">⚠️ OWM_API_KEY environment variable is not set. Set it before using the app.</div>
+      {% endif %}
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="banner {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <section class="card">
+        <form action="{{ url_for('weather') }}" method="POST" id="weather-form">
+          <label for="query">Enter a location (City, Postal Code, etc.)</label>
+          <input id="query" name="query" type="text" placeholder="Toronto or M5G 2C3" />
+          <div class="row">
+            <label class="checkbox">
+              <input type="checkbox" id="use_geo" name="use_geo" value="1" />
+              Use current location (browser geolocation)
+            </label>
+            <label class="checkbox">
+              <input type="checkbox" id="want_forecast" name="want_forecast" value="1" checked />
+              Include 5-day forecast
+            </label>
+          </div>
+          <input type="hidden" id="lat" name="lat" />
+          <input type="hidden" id="lon" name="lon" />
+          <button type="submit">Get Weather</button>
+        </form>
+      </section>
+
+      {% if weather %}
+      <section class="card">
+        <h2>Current Weather</h2>
+        <div class="weather-now">
+          <img src="{{ weather.icon }}" alt="icon" class="icon" />
+          <div>
+            <div class="title">{{ weather.location }}</div>
+            <div class="desc">{{ weather.description }}</div>
+            <div class="meta">
+              <span>🌡️ {{ weather.temp }}°C (feels {{ weather.feels_like }}°C)</span>
+              <span>💧 {{ weather.humidity }}%</span>
+              <span>💨 {{ weather.wind }} m/s</span>
+              <span>🕒 {{ weather.time }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if forecast %}
+      <section class="card">
+        <h2>5‑Day Forecast</h2>
+        <div class="forecast">
+          {% for day in forecast %}
+          <div class="f-item">
+            <div class="date">{{ day.date }}</div>
+            <img src="{{ day.icon }}" alt="icon" class="icon-sm" />
+            <div class="temp">{{ day.temp }}°C</div>
+            <div class="desc">{{ day.description }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      <footer>
+        <small>Real‑time data from OpenWeatherMap • This app is for Tech Assessment 1 only.</small>
+      </footer>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
