@@ -1,0 +1,64 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>History</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>Saved Queries</h1>
+      <nav class="nav">
+        <a href="{{ url_for('index') }}">Home</a>
+      </nav>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="banner {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <section class="card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Created</th>
+            <th>Location</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Temp summary</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td>{{ r["id"] }}</td>
+            <td>{{ r["created_at"] }}</td>
+            <td>{{ r["location_input"] }}</td>
+            <td>{{ r["start_date"] or "-" }}</td>
+            <td>{{ r["end_date"] or "-" }}</td>
+            <td><code>{{ r["temp_summary"] or "-" }}</code></td>
+            <td>{{ r["notes"] or "-" }}</td>
+            <td class="actions">
+              <a class="btn" href="{{ url_for('edit', id=r['id']) }}">Edit</a>
+              <form style="display:inline" action="{{ url_for('delete', id=r['id']) }}" method="POST" onsubmit="return confirm('Delete this record?')">
+                <button class="btn danger" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

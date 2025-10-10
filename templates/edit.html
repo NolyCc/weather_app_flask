@@ -1,0 +1,40 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Edit Record</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>Edit Record #{{ row["id"] }}</h1>
+      <nav class="nav">
+        <a href="{{ url_for('history') }}">Back</a>
+      </nav>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="banner {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <section class="card">
+      <form method="POST">
+        <label for="location_input">Location</label>
+        <input id="location_input" name="location_input" type="text" value="{{ row['location_input'] }}" />
+
+        <label for="notes" style="margin-top:8px;">Notes (optional)</label>
+        <textarea id="notes" name="notes" rows="4" placeholder="Add a note...">{{ row['notes'] or '' }}</textarea>
+
+        <button type="submit">Save Changes</button>
+      </form>
+    </section>
+  </main>
+</body>
+</html>

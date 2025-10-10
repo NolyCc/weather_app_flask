@@ -45,4 +45,7 @@
    ```
    Open http://127.0.0.1:5000 in browser.
 
+6. **Part 2**
+   - Since the API that provides extended weather forecasts requires payment, I decided to continue using the same free API from Part 1 and simply add a new request function for additional data.
+
 
